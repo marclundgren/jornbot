@@ -45,9 +45,11 @@ const responses = {
 // var rtm = new RtmClient();
 rtm.on('message', async (event) => {
   const { text } = event;
-  const matchingResponseList = Object.keys(responses).find((key) => {
+  const matchingResponseListKey = Object.keys(responses).find((key) => {
     return text.trim().toLowerCase().includes(key.toLowerCase());
   });
+
+  const matchingResponseList = responses[matchingResponseListKey];
 
   if (matchingResponseList && matchingResponseList.length) {
     const response = matchingResponseList[Math.floor(Math.random() * matchingResponseList.length)];
@@ -57,7 +59,7 @@ rtm.on('message', async (event) => {
     await (new Promise((resolve) => setTimeout(resolve, delay)));
 
     const reply = await rtm.sendMessage(response, event.channel);
-    console.log('Message sent successfully', reply.ts);
+    console.log('Message sent successfully', reply.ts, { response, 'event.channel': event.channel });
   }
 });
 
