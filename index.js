@@ -44,11 +44,10 @@ const responses = {
 
 // var rtm = new RtmClient();
 rtm.on('message', async (event) => {
-  console.log({ event });
-
   const { text } = event;
-
-  const matchingResponseList = responses[text.trim()];
+  const matchingResponseList = Object.keys(responses).find((key) => {
+    return text.trim().toLowerCase().includes(key.toLowerCase());
+  });
 
   if (matchingResponseList && matchingResponseList.length) {
     const response = matchingResponseList[Math.floor(Math.random() * matchingResponseList.length)];
@@ -57,9 +56,7 @@ rtm.on('message', async (event) => {
 
     await (new Promise((resolve) => setTimeout(resolve, delay)));
 
-    // Send a message (clears typing indicator)
     const reply = await rtm.sendMessage(response, event.channel);
-
     console.log('Message sent successfully', reply.ts);
   }
 });
@@ -67,8 +64,6 @@ rtm.on('message', async (event) => {
 (async () => {
   // Connect to Slack
   await rtm.start();
-
-  // console.log({ self, team });
 })();
 
 const http = require('http');
