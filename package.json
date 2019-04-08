@@ -4,8 +4,19 @@
   "main": "index.js",
   "author": "Marc Lundgren",
   "license": "MIT",
+  "engines": {
+    "node": "^11.0.0",
+    "yarn": "^1.13.0"
+  },
+  "scripts": {
+    "start": "node index.js",
+    "bot": "node bot.js"
+  },
   "dependencies": {
     "@slack/events-api": "^2.2.0",
-    "@slack/web-api": "^5.0.0"
+    "@slack/web-api": "^5.0.0",
+    "body-parser": "^1.18.3",
+    "express": "^4.16.4",
+    "semistandard": "^13.0.1"
   }
 }
