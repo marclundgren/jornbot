@@ -51,7 +51,7 @@ rtm.on('message', async (event) => {
 
   if (matchingResponseList && matchingResponseList.length) {
     const response = matchingResponseList[Math.floor(Math.random() * matchingResponseList.length)];
-    await rtm.sendTyping(event.channel);
+    await rtm.sendTyping(event.channel).catch(console.error);
     const delay = (response.length * 20) + 3000;
 
     await (new Promise((resolve) => setTimeout(resolve, delay)));
@@ -63,7 +63,7 @@ rtm.on('message', async (event) => {
 
 (async () => {
   // Connect to Slack
-  await rtm.start();
+  await rtm.start().catch(console.error);
 })();
 
 const http = require('http');
