@@ -1,0 +1,11 @@
+{
+  "name": "jornbot",
+  "version": "1.0.0",
+  "main": "index.js",
+  "author": "Marc Lundgren",
+  "license": "MIT",
+  "dependencies": {
+    "@slack/events-api": "^2.2.0",
+    "@slack/web-api": "^5.0.0"
+  }
+}
