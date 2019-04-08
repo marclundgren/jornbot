@@ -2,17 +2,6 @@
 # yarn lockfile v1
 
 
-"@slack/client@^5.0.0":
-  version "5.0.0"
-  resolved "https://registry.yarnpkg.com/@slack/client/-/client-5.0.0.tgz#067543e7379ae7c51e4828375c9c593db2d68abe"
-  integrity sha512-aQAUjfzi8qtaS/582ZukRioMH8jnvUfbtBBrDMgkmq1Tv00BGDZCjO6I5vhwmtxxkAs+AfmgDmB90SPvrB0/pQ==
-  dependencies:
-    "@slack/logger" "^1.0.0"
-    "@slack/rtm-api" "^5.0.0"
-    "@slack/types" "^1.0.0"
-    "@slack/web-api" "^5.0.0"
-    "@slack/webhook" "^5.0.0"
-
 "@slack/events-api@^2.2.0":
   version "2.2.0"
   resolved "https://registry.yarnpkg.com/@slack/events-api/-/events-api-2.2.0.tgz#c369417f8c939100572de96cec93354b98022937"
@@ -71,15 +60,6 @@
     is-stream "^1.1.0"
     p-queue "^2.4.2"
     p-retry "^4.0.0"
-
-"@slack/webhook@^5.0.0":
-  version "5.0.0"
-  resolved "https://registry.yarnpkg.com/@slack/webhook/-/webhook-5.0.0.tgz#0044a3940afc16cbc607c71acdffddb9e9d4f161"
-  integrity sha512-cDj3kz3x9z9271xPNzlwb90DpKTYybG2OWPJHigJL8FegR80rzQyD0v4bGuStGGkHbAYDKE2BMpJambR55hnSg==
-  dependencies:
-    "@slack/types" "^1.0.0"
-    "@types/node" ">=8.9.0"
-    axios "^0.18.0"
 
 "@types/events@*":
   version "3.0.0"

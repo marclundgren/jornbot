@@ -1,21 +1,24 @@
-var RtmClient = require('@slack/client').RtmClient;
-var CLIENT_EVENTS = require('@slack/client').CLIENT_EVENTS;
+// var { RtmClient, CLIENT_EVENTS } = require('@slack/client');
+const { RTMClient } = require('@slack/rtm-api');
+const rtm = new RTMClient(process.env.SLACK_TOKEN);
+// var CLIENT_EVENTS = require('@slack/client').CLIENT_EVENTS;
 
-var rtm = new RtmClient(process.env.SLACK_TOKEN);
-rtm.start();
+// var rtm = new RtmClient();
+rtm.on('message', async (event) => {
+  console.log({ event });
 
-let channel;
+  await rtm.sendTyping(event.channel);
+  await (new Promise((resolve) => setTimeout(resolve, 3000)));
 
-rtm.on(CLIENT_EVENTS.RTM.AUTHENTICATED, (rtmStartData) => {
-  for (const c of rtmStartData.channels) {
-    if (c.is_member && c.name === 'jorn') {
-      channel = c.id;
-    }
-  }
+  // Send a message (clears typing indicator)
+  const reply = await rtm.sendMessage(`Welcome to #jorn, <@${event.user}>`, event.channel);
 
-  console.log(`Logged in as ${rtmStartData.self.name} of team ${rtmStartData.team.name}`);
-
-  rtm.on(CLIENT_EVENTS.RTM.RTM_CONNECTION_OPENED, () => {
-    rtm.sendMessage('@here What is this place?', channel);
-  });
+  console.log('Message sent successfully', reply.ts);
 });
+
+(async () => {
+  // Connect to Slack
+  const { self, team } = await rtm.start();
+
+  console.log({ self, team });
+})();
