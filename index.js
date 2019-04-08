@@ -22,3 +22,7 @@ rtm.on('message', async (event) => {
 
   console.log({ self, team });
 })();
+
+const http = require('http');
+http.createServer(function () {
+}).listen(process.env.PORT || 5000);
