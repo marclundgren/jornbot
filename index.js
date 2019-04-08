@@ -1,24 +1,21 @@
-const { WebClient } = require('@slack/web-api');
-const { createEventAdapter } = require('@slack/events-api');
-const slackEvents = createEventAdapter(process.env.SLACK_SIGNING_SECRET);
+var RtmClient = require('@slack/client').RtmClient;
+var CLIENT_EVENTS = require('@slack/client').CLIENT_EVENTS;
 
-// An access token (from your Slack app or custom integration - xoxp, xoxb)
-const token = process.env.SLACK_TOKEN;
+var rtm = new RtmClient(process.env.SLACK_TOKEN);
+rtm.start();
 
-const web = new WebClient(token);
+let channel;
 
-// This argument can be a channel ID, a DM ID, a MPDM ID, or a group ID
-const conversationId = '#jorn';
+rtm.on(CLIENT_EVENTS.RTM.AUTHENTICATED, (rtmStartData) => {
+  for (const c of rtmStartData.channels) {
+    if (c.is_member && c.name === 'jorn') {
+      channel = c.id;
+    }
+  }
 
-(async () => {
-  // Attach listeners to events by Slack Event "type". See: https://api.slack.com/events/message.im
-  slackEvents.on('message', (event) => {
-    console.log(`Received a message event: user ${event.user} in channel ${event.channel} says ${event.text}`);
+  console.log(`Logged in as ${rtmStartData.self.name} of team ${rtmStartData.team.name}`);
+
+  rtm.on(CLIENT_EVENTS.RTM.RTM_CONNECTION_OPENED, () => {
+    rtm.sendMessage('@here What is this place?', channel);
   });
-
-  // See: https://api.slack.com/methods/chat.postMessage
-  // const res = await web.chat.postMessage({ channel: conversationId, text: ':jorn:' });
-
-  // `res` contains information about the posted message
-  // console.log('Message sent: ', res.ts);
-})();
+});
