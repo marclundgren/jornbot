@@ -10,13 +10,14 @@
   },
   "scripts": {
     "start": "node index.js",
-    "bot": "node bot.js"
+    "speak": "node speak.js"
   },
   "dependencies": {
     "@slack/events-api": "^2.2.0",
     "@slack/rtm-api": "^5.0.0",
-    "@slack/web-api": "^5.0.0",
+    "@slack/web-api": "^5.0.1",
     "body-parser": "^1.18.3",
+    "dotenv": "^7.0.0",
     "express": "^4.16.4",
     "semistandard": "^13.0.1"
   }

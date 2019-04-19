@@ -1,10 +1,46 @@
-// var { RtmClient, CLIENT_EVENTS } = require('@slack/client');
+require('dotenv').config();
+const {
+  SLACK_TOKEN,
+  // BOT_NAME = 'jorn',
+  // CHANNEL_ID = 'CGK0BQX1N', // #jorn
+  // JORN_USER = 'UHGSKBY3Y', // TODO
+  PORT = 4999
+} = process.env;
+
 const { RTMClient } = require('@slack/rtm-api');
-const rtm = new RTMClient(process.env.SLACK_TOKEN);
-// var CLIENT_EVENTS = require('@slack/client').CLIENT_EVENTS;
+const { WebClient } = require('@slack/web-api');
+const rtm = new RTMClient(SLACK_TOKEN);
+
+// Read a token from the environment variables
+// const token = process.env.SLACK_TOKEN;
+
+// Initialize
+const web = new WebClient(SLACK_TOKEN);
 
 const responses = {
-  barf: [`Douglas had to poop. His butt was all stinky because he had to poop so badly. There was a gross woman named Rebecca who was sunbathing all naked, and she was fat. Douglas walked up to her and said, "I need to poop." "Okay," Rebecca replied, "I like poop." Douglas squatted down over the fat sunbathing lady and went poop.`],
+  barf: [`Douglas had to p.......oop. His butt was all stinky because he had to poop so badly. There was a gross woman named Rebecca who was sunbathing all naked, and she was fat. Douglas walked up to her and said, "I need to poop." "Okay," Rebecca replied, "I like poop." Douglas squatted down over the fat sunbathing lady and went poop.`],
+  'What is the meaning of life?': [
+    ':jorn:'
+  ],
+  'good jorning': [
+    'Good Jorning 👋🏾'
+  ],
+  'What do you think of Giuseppe Jorn?': [
+    'Giuseppe has yet to truly accept Jorn. He must be punished and banished back to Ball Park Pizza with the Ghouls of Ghalfour!'
+  ],
+  'Who is Giuseppe Jorn?': [
+    'Dude, Giuseppe is lame. He doesn\'t even think I\'m real. BACK TO MONG YOU BARBARIAN!'
+  ],
+  'What does Giuseppe smell like Jorn?': [
+    'Barf dude, fricken barf.'
+  ],
+  'jon': [
+    'Call me "Jon" one more time...🖕🏿',
+    'My Father Jon told me one great peiece of advice that I`ll never forget.'
+  ],
+  'what did jon say?': [
+    '"one great peiece of advice that I`ll never forget"'
+  ],
   jorn: [
     'The almighty Jorn smiles upon thee 😌',
     'Do I make you jorny, baby?',
@@ -25,34 +61,27 @@ const responses = {
     'Giuseppe, the mongrel cries with the fury of a thousand newborn baby girls!',
     'Hold my beer, I\'ve got Swamp Monsters to banish back to Mong'
   ],
-  'What is the meaning of life?': [
-    ':jorn:'
-  ],
-  'good jorning': [
-    ':jorn: Good Jorning 👋🏾'
-  ],
-  'What do you think of Giuseppe Jorn?': [
-    'Giuseppe has yet to truly accept Jorn. He must be punished and banished back to Ball Park Pizza with the Ghouls of Ghalfour!'
-  ],
-  'Who is Giuseppe Jorn?': [
-    'Dude, Giuseppe is lame. He doesn\'t even think I\'m real. BACK TO MONG YOU BARBARIAN!'
-  ],
-  'What does Giuseppe smell like Jorn?': [
-    'Barf dude, fricken barf.'
+  jamsey: [
+    'Oh cool'
   ]
 };
 
-// var rtm = new RtmClient();
 rtm.on('message', async (event) => {
+  console.log(event);
+  // if (event.user === JORN_USER) { // don't respond to yourself, jorn
+  //   return;
+  // }
+
   const { text } = event;
-  const matchingResponseListKey = Object.keys(responses).find((key) => {
-    return text.trim().toLowerCase().includes(key.toLowerCase());
-  });
+  const matchingResponseListKey = Object.keys(responses).find((key) =>
+    text.trim().toLowerCase().includes(key.toLowerCase())
+  );
 
   const matchingResponseList = responses[matchingResponseListKey];
 
   if (matchingResponseList && matchingResponseList.length) {
     const response = matchingResponseList[Math.floor(Math.random() * matchingResponseList.length)];
+
     await rtm.sendTyping(event.channel).catch(console.error);
     const delay = (response.length * 20) + 3000;
 
@@ -60,14 +89,25 @@ rtm.on('message', async (event) => {
 
     const reply = await rtm.sendMessage(response, event.channel);
     console.log('Message sent successfully', reply.ts, { response, 'event.channel': event.channel });
+  } else {
+    console.log('matchingResponseListKey', matchingResponseListKey);
+  }
+
+  await (new Promise((resolve) => setTimeout(resolve, 5000)));
+  const reactionName = Math.random() >= 0.5 ? 'jorn' : 'raised_hands::skin-tone-6';
+  web.reactions.add({ name: reactionName, channel: event.channel, timestamp: event.ts });
+
+  if (matchingResponseListKey === 'jamsey') {
+    web.reactions.add({ name: 'jamsey', channel: event.channel, timestamp: event.ts });
   }
 });
 
 (async () => {
-  // Connect to Slack
   await rtm.start().catch(console.error);
+
+  console.log(`Started successfully on port=${PORT}`);
 })();
 
 const http = require('http');
 http.createServer(function () {
-}).listen(process.env.PORT || 5000);
+}).listen(PORT);
